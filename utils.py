@@ -1,4 +1,6 @@
 states = {
+    # a dictionary to translate
+    # state abbreviations
     'AK': 'Alaska',
     'AL': 'Alabama',
     'AR': 'Arkansas',
