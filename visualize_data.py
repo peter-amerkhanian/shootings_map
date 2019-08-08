@@ -1,4 +1,4 @@
-from init_data import init_data, today # something with automatically updating the data
+from init_data import init_data # something with automatically updating the data
 from utils import get_href, get_measurements
 import folium
 
@@ -15,11 +15,13 @@ for i in range(df.shape[0]):
     href = get_href(event)
     popup = f'''
     <b>
-    <a href="{get_href(event)}">{event.case}</a>
+        <a href="{get_href(event)}">{event.case}</a>
     </b>
+    <p>
     Fatalities: {event.fatalities} <br/>
     Injured: {event.injured} <br/>
     Date: {event.date}
+    </p>
     '''
     measure = get_measurements(event)
     folium.Marker(location=(event.latitude,
