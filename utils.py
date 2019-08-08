@@ -56,3 +56,27 @@ states = {
     'WI': 'Wisconsin',
     'WV': 'West Virginia',
     'WY': 'Wyoming'}
+
+
+def get_href(event):
+    """
+    Get a link to a google search of the shooting
+    :param event: a Pandas df row
+    :return: a string link
+    """
+    case = event.case + " " + event.city + " " + str(event.year)
+    return f'https://www.google.com/search?q={case.replace(" ","+")}'
+
+
+def get_measurements(event):
+    """
+    adjust the size of the icons on the map
+    :param event: a Pandas df row
+    :return: the shooting's size on the map
+    """
+    measure = event.fatalities * 3
+    if measure > 30:
+        measure *= .5
+    if measure < 10:
+        measure *= 1.5
+    return measure
