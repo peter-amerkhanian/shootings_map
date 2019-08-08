@@ -81,4 +81,4 @@ def get_measurements(event):
         measure *= .5
     if measure < 10:
         measure *= 1.5
-    return measure
+    return float(measure)

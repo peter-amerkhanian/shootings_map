@@ -53,13 +53,13 @@ def correct_types(df):
     :param df: the Mother Jones data in df form
     :return: df object with corrected types
     """
-    df['fatalities'] = df['fatalities'].apply(int)
-    df['injured'] = df['injured'].apply(int)
-    df['total_victims'] = df['total_victims'].apply(int)
-    df['year'] = df['year'].apply(int)
-    df['age_of_shooter'] = df['age_of_shooter'].apply(int)
-    df['latitude'] = df['latitude'].apply(float)
-    df['longitude'] = df['longitude'].apply(float)
+    df['fatalities'] = df['fatalities'].astype('int64')
+    df['injured'] = df['injured'].astype('int64')
+    df['total_victims'] = df['total_victims'].astype('int64')
+    df['year'] = df['year'].astype('int')
+    df['age_of_shooter'] = df['age_of_shooter'].astype('int64')
+    df['latitude'] = df['latitude'].astype('float')
+    df['longitude'] = df['longitude'].astype('float')
     return df
 
 
