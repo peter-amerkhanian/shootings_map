@@ -1,4 +1,4 @@
-from init_data import init_data # something with automatically updating the data
+from init_data import init_data
 from utils import get_href, get_measurements
 import folium
 import argparse
@@ -17,6 +17,7 @@ if not args.get:
 else:
     df = init_data()
     df.to_csv('mass_shootings_1982_2019.csv')
+
 map_object = folium.Map(
     location=[34, -104],
     zoom_start=4,
