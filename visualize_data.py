@@ -3,6 +3,7 @@ from utils import get_href, get_measurements
 import folium
 import argparse
 import pandas as pd
+import os
 
 
 parser = argparse.ArgumentParser(description='Map of Mother Jones U.S. Mass Shootings')
@@ -13,10 +14,10 @@ parser.add_argument(
 )
 args = parser.parse_args()
 if not args.get:
-    df = pd.read_csv('mass_shootings_1982_2019.csv')
+    df = pd.read_csv(os.path.join('data', 'mass_shootings_1982_2019.csv'))
 else:
     df = init_data()
-    df.to_csv('mass_shootings_1982_2019.csv')
+    df.to_csv(os.path.join('data', 'mass_shootings_1982_2019.csv'))
 
 map_object = folium.Map(
     location=[34, -104],
