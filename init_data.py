@@ -1,12 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime
 import pandas as pd
-from utils import states
+from utils import abbreviation_translate
 
 
 url = "https://docs.google.com/spreadsheets/d/1b9o6uDO18sLxBqPwl_Gh9bnhW-ev_dABH83M5Vb5L8o/htmlview?sle=true#gid=0"
-today = datetime.today()
 
 
 def get_data(uri):
@@ -32,19 +30,6 @@ def get_data(uri):
                 yield temp
             temp = []
         temp.append(elem.text)
-
-
-def abbreviation_translate(state):
-    """
-    HELPER for alter_rows(). Replaces abbreviated state names with full name
-    :param state: the state entry, could be complete, could be abrev
-    :return: string of the state in full name form
-    """
-    full = states.get(state.upper())
-    if full:
-        return full
-    else:
-        return state
 
 
 def correct_types(df):
