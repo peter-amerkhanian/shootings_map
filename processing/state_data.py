@@ -1,5 +1,5 @@
 from processing.utils import state_codes, states, abbreviation_translate
-from processing import init_data
+from processing.base_data import init_data
 import requests
 import pandas as pd
 import os
@@ -39,8 +39,11 @@ def build_states_df():
 
 
 def expand_states_df(fatalities_df):
-    fatalities_df['ShootingFatalitiesPerCapita'] = fatalities_df['Fatalities']/fatalities_df['Population']
-    fatalities_df['ShootingPerCapita'] = fatalities_df['Shootings']/fatalities_df['Population']
+    fatalities_df['ShootingFatalitiesPerCapita'] = fatalities_df['Fatalities'] / fatalities_df['Population']
+    fatalities_df['ShootingPerCapita'] = fatalities_df['Shootings'] / fatalities_df['Population']
+    fatalities_df['ShootingFatalitiesPer100000'] = fatalities_df['ShootingFatalitiesPerCapita'] * 100000
+    fatalities_df['ShootingPer100000'] = fatalities_df['ShootingPerCapita'] * 100000
+    fatalities_df = fatalities_df[fatalities_df['Population'] != 0]
     pd.set_option('display.float_format', lambda x: '%.10f' % x)
     return fatalities_df
 
