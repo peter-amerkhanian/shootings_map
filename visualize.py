@@ -1,10 +1,9 @@
-from init_data import init_data
-from utils import get_href, get_measurements
+from processing import init_data
+from processing.utils import get_href, get_measurements
 import folium
 import argparse
 import pandas as pd
 import os
-
 
 parser = argparse.ArgumentParser(description='Map of Mother Jones U.S. Mass Shootings')
 parser.add_argument(
@@ -17,7 +16,6 @@ if not args.get:
     df = pd.read_csv(os.path.join('data', 'mass_shootings_1982_2019.csv'))
 else:
     df = init_data()
-    df.to_csv(os.path.join('data', 'mass_shootings_1982_2019.csv'))
 
 map_object = folium.Map(
     location=[34, -104],
@@ -45,4 +43,4 @@ for i in range(df.shape[0]):
                   popup=popup,
                   icon=folium.features.CustomIcon(icon_image=icon_url,
                                                   icon_size=(measure, measure))).add_to(map_object)
-map_object.save('mass_shootings_1982_2019.html')
+map_object.save(os.path.join('visuals', 'mass_shootings_1982_2019.html'))

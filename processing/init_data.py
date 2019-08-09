@@ -1,7 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-from utils import abbreviation_translate
+from processing.utils import abbreviation_translate
+import os
 
 url = "https://docs.google.com/spreadsheets/d/1b9o6uDO18sLxBqPwl_Gh9bnhW-ev_dABH83M5Vb5L8o/htmlview?sle=true#gid=0"
 
@@ -87,4 +88,5 @@ def init_data():
     :return: df with cleaned version of Mother Jones data
     """
     df = clean(build())
+    df.to_csv(os.path.join('data', 'mass_shootings_1982_2019.csv'))
     return df

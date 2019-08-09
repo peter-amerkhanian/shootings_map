@@ -1,5 +1,5 @@
-from utils import state_codes, states, abbreviation_translate
-from init_data import init_data
+from processing.utils import state_codes, states, abbreviation_translate
+from processing import init_data
 import requests
 import pandas as pd
 import os
@@ -48,7 +48,6 @@ def expand_states_df(fatalities_df):
 def init_states_df():
     df = build_states_df()
     df = expand_states_df(df)
+    df.to_csv(os.path.join('data', 'state_shootings_1982_2019.csv'))
     return df
 
-
-init_states_df().to_csv(os.path.join('data', 'state_shootings_1982_2019.csv'))
