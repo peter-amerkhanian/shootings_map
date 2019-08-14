@@ -1,11 +1,12 @@
-from processing import init_states_df, init_data
+from processing import init_state_data, init_data
 from processing.utils import get_href
 import folium
 import os
 
 url = 'https://raw.githubusercontent.com/python-visualization/folium/master/examples/data'
 state_geo = f'{url}/us-states.json'
-state_data = init_states_df()
+state_data = init_state_data()
+# TODO Fix this with the new state data!
 df = init_data()
 m = folium.Map(location=[34, -102], zoom_start=4)
 

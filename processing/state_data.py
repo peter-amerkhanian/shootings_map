@@ -1,57 +1,39 @@
-from processing.utils import state_codes, states, abbreviation_translate
-from processing.base_data import init_data
-import requests
 import pandas as pd
 import os
-
-#This will be replaced with the FRED
-key = os.environ['CENSUS_KEY']
-census_url = 'https://api.census.gov/data/2018/pep/population?'
-PARAMS = {'get': 'POP',
-          'for': 'state:*',
-          'key': key}
+import numpy as np
 
 
-def load_census():
-    response = requests.get(url=census_url, params=PARAMS)
-    pops = response.json()
-    for x in range(len(pops)-1):
-        for k, v in state_codes.items():
-            if v == pops[x+1][1]:
-                pops[x+1][1] = abbreviation_translate(k)
-    return {v: k for k, v in dict(pops).items()}
-
-
-def build_states_df():
-    df = init_data()
-    census = load_census()
-    fatalities_list, states_list, shootings_list, pops_list = [], [], [], []
-    for state in states.values():
-        states_list.append(state)
-        pop = int(census.get(state)) if census.get(state) else 0
-        pops_list.append(pop)
-        fatalities_list.append(int(df[df['state'].str.lower() == state.lower()].fatalities.sum()))
-        shootings_list.append(len(df[df['state'].str.lower() == state.lower()].index))
-    fatalities_df = pd.DataFrame.from_dict({'State': states_list,
-                                            'Fatalities': fatalities_list,
-                                            'Shootings': shootings_list,
-                                            'Population': pops_list})
-    return fatalities_df
-
-
-def expand_states_df(fatalities_df):
-    fatalities_df['ShootingFatalitiesPerCapita'] = fatalities_df['Fatalities'] / fatalities_df['Population']
-    fatalities_df['ShootingPerCapita'] = fatalities_df['Shootings'] / fatalities_df['Population']
-    fatalities_df['ShootingFatalitiesPer100000'] = fatalities_df['ShootingFatalitiesPerCapita'] * 100000
-    fatalities_df['ShootingPer100000'] = fatalities_df['ShootingPerCapita'] * 100000
-    fatalities_df = fatalities_df[fatalities_df['Population'] != 0]
-    pd.set_option('display.float_format', lambda x: '%.10f' % x)
-    return fatalities_df
-
-
-def init_states_df():
-    df = build_states_df()
-    df = expand_states_df(df)
-    df.to_csv(os.path.join('data', 'state_shootings_1982_2019.csv'))
+def init_state_data():
+    base_df = pd.read_csv(r'data\mass_shootings_1982_2019.csv')
+    pop_df = pd.read_csv(r'data\state_pop_1900_2018.csv', index_col='Year')
+    start_year = 1999
+    base_df = base_df[base_df.year >= start_year]
+    pop_df = pop_df[pop_df.index >= start_year]
+    pop_df.loc[2019] = (pop_df.loc[2018])
+    dates = pd.DataFrame([pop_df.index, np.zeros_like(pop_df.index), np.zeros_like(pop_df.index)]).T
+    dates.columns=['year', 'fatalities', 'shootings']
+    all_states_dict = {}
+    for x in range(len(pop_df.columns)-1):
+        state_dict = {}
+        state = base_df[base_df['state'] == pop_df.columns[x+1]]
+        state = state.groupby('year', as_index=False)[['fatalities']].sum()
+        state = pd.merge(dates, state, how='outer', on='year', copy=False)
+        state['fatalities'] = state['fatalities_y']
+        state = state.drop(['fatalities_x', 'fatalities_y'], axis=1)
+        state = state.fillna(0)
+        for ind in range(state.shape[0]):
+            year = state.loc[ind, 'year']
+            state.loc[ind, 'population'] = pop_df.loc[year, pop_df.columns[x+1]]
+            state.loc[ind, 'fatal_per_100k'] = state.loc[ind, 'fatalities']/state.loc[ind, 'population'] * 100000
+        max_year = int(min(state[state['fatal_per_100k'] == max(state['fatal_per_100k'].values)].year))
+        maximum = np.max(state.fatal_per_100k)
+        mean = np.mean(state.fatal_per_100k)
+        median = np.median(state.fatal_per_100k)
+        all_states_dict[pop_df.columns[x+1]] = {'median': median,
+                                                'mean': mean,
+                                                'max': maximum,
+                                                'max_year': max_year}
+    # average yearly mass shooting crime rate, 1999 - 2019
+    df = pd.DataFrame(all_states_dict).T.sort_index()
+    df.to_csv(os.path.join('data', 'state_shootings_1982_2019_updated.csv'))
     return df
-
