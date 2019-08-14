@@ -4,6 +4,7 @@ import requests
 import pandas as pd
 import os
 
+#This will be replaced with the FRED
 key = os.environ['CENSUS_KEY']
 census_url = 'https://api.census.gov/data/2018/pep/population?'
 PARAMS = {'get': 'POP',
