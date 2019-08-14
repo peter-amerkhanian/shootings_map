@@ -17,7 +17,8 @@ def init_fred_data():
             "show_axis_titles=yes&show_tooltip=yes&id={}POP&scale=left&cosd=1900-01-01&" \
             "coed=2018-01-01&line_color=%234572a7&link_values=false&line_style=solid&mark_type=none&" \
             "mw=3&lw=2&ost=-99999&oet=99999&mma=0&fml=a&fq=Annual&fam=avg&fgst=lin&fgsnd=2009-06-01&" \
-            "line_index=1&transformation=lin&vintage_date=2019-08-13&revision_date=2019-08-13&nd=1900-01-01".format(state)
+            "line_index=1&transformation=lin&vintage_date=2019-08-13&" \
+            "revision_date=2019-08-13&nd=1900-01-01".format(state)
         print(url)
         df = pd.read_csv(url)
         if ind == 0:
@@ -29,4 +30,5 @@ def init_fred_data():
         state_populations[states[state]] = pop
     df = pd.DataFrame.from_dict(state_populations)
     df.to_csv(os.path.join('data', 'state_pop_1900_2018.csv'))
+    return df
 
