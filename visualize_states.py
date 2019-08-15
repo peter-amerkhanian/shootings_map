@@ -5,8 +5,7 @@ import os
 
 url = 'https://raw.githubusercontent.com/python-visualization/folium/master/examples/data'
 state_geo = f'{url}/us-states.json'
-state_data = pd.read_csv(os.path.join('data', 'state_shootings_1982_2019_updated.csv'))
-# TODO Fix this with the new state data!
+state_data = pd.read_csv(os.path.join('data', 'state_shootings_1982_2019.csv'))
 df = pd.read_csv(os.path.join('data', 'mass_shootings_1982_2019.csv'))
 m = folium.Map(location=[34, -102], zoom_start=4)
 

@@ -19,7 +19,7 @@ def init_fred_data():
             "line_index=1&transformation=lin&vintage_date=2019-08-13&" \
             "revision_date=2019-08-13&nd=1900-01-01".format(state)
         df = pd.read_csv(url)
-        print(state, " retrieved.")
+        print(state, " retrieved.", end=" ")
         if ind == 0:
             state_populations['Year'] = [datetime.strptime(x, "%Y-%m-%d").year for x in df['DATE'].tolist()]
         pop = [x*1000 for x in df['{}POP'.format(state)].tolist()]
