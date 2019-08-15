@@ -1,25 +1,25 @@
-from processing import init_state_data, init_data
 from processing.utils import get_href
 import folium
+import pandas as pd
 import os
 
 url = 'https://raw.githubusercontent.com/python-visualization/folium/master/examples/data'
 state_geo = f'{url}/us-states.json'
-state_data = init_state_data()
+state_data = pd.read_csv(os.path.join('data', 'state_shootings_1982_2019_updated.csv'))
 # TODO Fix this with the new state data!
-df = init_data()
+df = pd.read_csv(os.path.join('data', 'mass_shootings_1982_2019.csv'))
 m = folium.Map(location=[34, -102], zoom_start=4)
 
 folium.Choropleth(
     geo_data=state_geo,
     name='choropleth',
     data=state_data,
-    columns=['State', 'ShootingFatalitiesPer100000'],
+    columns=['state', 'mean'],
     key_on='feature.properties.name',
-    fill_color='BuPu',
+    fill_color='YlGn',
     fill_opacity=0.7,
     line_opacity=0.2,
-    legend_name='Mass Shooting Fatalities per 100,000 people').add_to(m)
+    legend_name='Average Yearly Mass Shooting Fatalities per 100,000 people, 1999-2019').add_to(m)
 folium.LayerControl().add_to(m)
 
 icon_url = 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com' \
@@ -27,6 +27,8 @@ icon_url = 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com' \
 
 for i in range(df.shape[0]):
     event = df.iloc[i]
+    if event.year < 1999:
+        continue
     href = get_href(event)
     popup = f'''
     <b>

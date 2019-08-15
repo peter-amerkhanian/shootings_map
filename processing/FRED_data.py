@@ -9,7 +9,6 @@ def init_fred_data():
     for ind, state in enumerate(state_codes.keys()):
         if state == "PR":
             continue
-        print(state)
         url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?" \
             "bgcolor=%23e1e9f0&chart_type=line&drp=0&fo=open%20sans&" \
             "graph_bgcolor=%23ffffff&height=450&mode=fred&recession_bars=on&" \
@@ -19,8 +18,8 @@ def init_fred_data():
             "mw=3&lw=2&ost=-99999&oet=99999&mma=0&fml=a&fq=Annual&fam=avg&fgst=lin&fgsnd=2009-06-01&" \
             "line_index=1&transformation=lin&vintage_date=2019-08-13&" \
             "revision_date=2019-08-13&nd=1900-01-01".format(state)
-        print(url)
         df = pd.read_csv(url)
+        print(state, " retrieved.")
         if ind == 0:
             state_populations['Year'] = [datetime.strptime(x, "%Y-%m-%d").year for x in df['DATE'].tolist()]
         pop = [x*1000 for x in df['{}POP'.format(state)].tolist()]

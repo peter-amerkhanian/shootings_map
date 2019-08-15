@@ -35,5 +35,6 @@ def init_state_data():
                                                 'max_year': max_year}
     # average yearly mass shooting crime rate, 1999 - 2019
     df = pd.DataFrame(all_states_dict).T.sort_index()
+    df['state'] = df.index
     df.to_csv(os.path.join('data', 'state_shootings_1982_2019_updated.csv'))
     return df
