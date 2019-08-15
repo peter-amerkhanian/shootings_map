@@ -26,7 +26,10 @@ def init_state_data(start_year):
         for ind in range(state.shape[0]):
             year = state.loc[ind, 'year']
             state.loc[ind, 'population'] = pop_df.loc[year, pop_df.columns[x+1]]
+            # Fatalities per 100k is calculated as outlined by the California Dept. of Justice
+            # https://oag.ca.gov/sites/all/files/agweb/pdfs/cjsc/prof10/formulas.pdf
             state.loc[ind, 'fatal_per_100k'] = state.loc[ind, 'fatalities'] / state.loc[ind, 'population'] * 100000
+        # Build each column clearly below:
         max_year = int(min(state[state['fatal_per_100k'] == max(state['fatal_per_100k'].values)].year))
         max_fatality = np.max(state.fatal_per_100k)
         mean = np.mean(state.fatal_per_100k)
